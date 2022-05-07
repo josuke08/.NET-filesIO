@@ -1,0 +1,20 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    void* p;
+    char * i;
+    float c;
+    int x;
+    p = &x;
+    *(int*)p = 5;
+    printf("%d\n", *(int*)p);
+    p = &c;
+    scanf("%f", (float*)p);
+    printf("%f\n", *(float*)p);
+    (int*)p = (int*)calloc(10, sizeof(char));
+    for(i = p; i < (char*)p + 10; i++)
+        printf("%d ", *i);
+    return 0;
+}

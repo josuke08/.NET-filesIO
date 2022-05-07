@@ -1,0 +1,66 @@
+﻿@using ProjetGED.Models
+@model ProjetGED.Models.FileUploaded
+
+@{
+    ViewBag.Title = "Create";
+}
+@{
+    bool isDownloadable = false;
+    bool isEditable = false;
+    bool isVisible = false;
+}
+
+<style type="text/css">
+    .permissions td {
+        padding: 20px;
+    }
+</style>
+
+<h2>FileUpload</h2>
+<h3>@ViewBag.location</h3>
+
+@using (Html.BeginForm("UploadFile", "Files", new { IsDownloadable = isDownloadable, IsEditable = isEditable, IsVisible = isVisible}, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Files, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Files, "", new { @type = "file", @multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.Files, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <table class="permissions">
+                <tr>
+                    <td>Telechargeable </td>
+                    <td>@Html.CheckBoxFor(m => isDownloadable)</td>
+                </tr>
+                <td>Modifiable</td>
+                <td>@Html.CheckBoxFor(m => isEditable)</td>
+                <tr>
+                    <td>Visible</td>
+                    <td>@Html.CheckBoxFor(m => isVisible)</td>
+                </tr>
+            </table>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Upload" class="btn btn-primary" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 text-success">
+                @ViewBag.UploadStatus
+            </div>
+        </div>
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

@@ -1,0 +1,26 @@
+﻿<link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+@if (Session["UserId"] != null)
+{
+    using (Html.BeginForm("Logout", "Utilisateur", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                @Html.ActionLink( @Session["Name"].ToString(), "Index", "Files", routeValues: null, htmlAttributes: new { title = "Manage" }) 
+            </li>
+            <li>
+                @Html.ActionLink("Log off", "Logout", "Utilisateurs", routeValues: null, htmlAttributes: new { id = "logoffLink" })
+            </li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Register", "Create", "Utilisateurs", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Log in", "Login", "Utilisateurs", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+

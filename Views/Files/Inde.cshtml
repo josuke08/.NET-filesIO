@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+@using (Html.BeginForm("Index", "Files", FormMethod.Get))
+{
+
+    <h3>@ViewBag.location</h3>
+
+    <br />
+    <a href="@Url.Action("UploadFile","Files")">Upload File</a>
+    <br />
+
+
+    foreach (var rep in ViewBag.Reps)
+    {
+        <a href="@Url.Action("Index","Files", new { RepID = rep.rep })">@rep.NomRep</a>
+
+    }
+    foreach (var doc in ViewBag.Docs)
+    {
+        <a href="@Url.Action("UploadRevision","Files", new { FileID = doc.doc })">@doc.titre</a>
+        <br />
+    }
+
+
+
+}

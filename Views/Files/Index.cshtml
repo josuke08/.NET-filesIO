@@ -1,0 +1,221 @@
+﻿@model ProjetGED.Models.Repertoire
+
+@{
+    ViewBag.Title = "View";
+}
+<link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+<link href="~/css/tables.css" rel="stylesheet" />
+<style type="text/css">
+    .upload {
+        padding-right: 20px;
+    }
+
+    .make {
+        padding-left: 20px;
+        border-left: 1px solid gray;
+    }
+
+    .path {
+        padding-left: 10px;
+        padding-left: 10px;
+    }
+
+    #perm{
+        color: gray;
+    }
+</style>
+
+<h3>@Model.NomRep</h3>
+
+<br />
+<table>
+    @{
+        bool FolderEditable = Session["UserID"] != null && (Model.isEditable || Model.proprietaire == Convert.ToInt32(Session["UserId"]));
+    }
+    <td class="upload">
+        @if (FolderEditable)
+        {
+        <a href="@Url.Action("UploadFile","Files", new { RepID = Model.rep})"><i class="bi bi-cloud-upload-fill"></i>&nbsp;Upload File</a>
+        }
+        else
+        {
+            <p id="perm"><i class="bi bi-cloud-upload-fill"></i>&nbsp;Upload File</p>
+        }
+    </td>
+    <td class="make">
+        @if (FolderEditable) {
+        <a href="@Url.Action("MakeDirectory","Files", new { RepID = Model.rep})"><i class="bi bi-folder-plus"></i>&nbsp;Make Directory</a>
+        }
+            else
+            {
+    <p id="perm"><i class="bi bi-folder-plus"></i>&nbsp;Make Directory</p>
+            }
+        
+    </td>
+</table>
+<br />
+<br />
+
+<table> <tr>
+    <td class="path"><a href="@Url.Action("Index","Files")">Uploads</a></td>
+    @foreach (var i in ViewBag.path)
+    {
+        <td class="path">></td>
+        <td class="path"> <a href="@Url.Action("Index","Files", new { RepID = i.rep })"> @i.NomRep </a> </td>
+    }
+</tr></table>
+
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            Titre
+        </th>
+        <th>
+            Etat
+        </th>
+        <th>
+            Proprietaire
+        </th>
+        <th>
+            Date de creation
+        </th>
+        <th class="icons">Edit</th>
+        <th class="icons">Download</th>
+        <th class="icons">History</th>
+        <th class="icons">Delete</th>
+    </tr>
+    @foreach (var item in ViewBag.Reps)
+    {
+        bool isUser = (item.proprietaire == Convert.ToInt32(Session["UserId"]));
+<tr>
+    <td>
+        <i class="bi bi-folder"></i>
+    </td>
+    <td>
+        @if (item.isVisible || isUser)
+        {
+            <a href="@Url.Action("Index","Files", new { RepID = item.rep })">@item.NomRep</a>
+        }
+        else
+        {
+            @item.NomRep
+        }
+    </td>
+    
+        @if (item.isDowloadable || item.isEditable || item.isVisible)
+        {
+        <td> Publique </td>
+    }
+    else
+    {
+        <td> Privé </td>
+    }
+       
+        <td>
+            @if (@item.Utilisateur != null)
+            {
+                @item.Utilisateur.Nom
+            }
+        </td>
+        <td>
+            @item.DateDepos
+        </td>
+        <td class="icons">
+        </td>
+        <td class="icons">
+        </td>
+        <td class="icons">
+        </td>
+        <td class="icons">
+            @if(isUser){
+            <a href="@Url.Action("DeleteFolder","Files", new { FolderID = item.rep})"><i class="bi bi-trash"></i></a>
+            }
+            else{
+            <i class="bi bi-trash" id="perm"></i>
+            }
+        </td>
+    </tr>
+    }
+
+    @foreach (var item in ViewBag.Docs)
+    {
+         
+            bool isUser = (item.UserID == Convert.ToInt32(Session["UserId"]));
+        
+<tr>
+    <td>
+        @{
+            string iname = "bi bi-filetype-" + Path.GetExtension(item.titre).TrimStart('.');
+        }
+        <i class="@iname"></i>
+    </td>
+    <td>
+        @if (item.isVisible || isUser)
+        {
+        <a href="@Url.Action("OpenFile", "Files", new { FileID = item.doc })">@item.titre</a>
+        }
+        else
+        {
+            @item.titre
+        }
+    </td>
+        @if(item.isDowloadable || item.isEditable || item.isVisible)
+        {
+           <td> Publique </td>
+        }
+        else
+        {
+            <td> Privé </td>
+                }
+    
+    <td>
+        @item.Utilisateur.Nom
+    </td>
+    <td>
+        @item.DateDepos
+    </td>
+    <td class="icons">
+        @if (item.isEditable || isUser) { 
+            <a href="@Url.Action("UploadRevision","Files", new { FileID = item.doc})"><i class="bi bi-pen"></i></a>
+        }
+                else
+                {
+    <i class="bi bi-pen" id="perm"></i>
+        }
+</td>
+    <td class="icons">
+        @if (item.isDowloadable || isUser) { 
+            <a href="@Url.Action("DownloadFile","Files", new { FileID = item.doc})"><i class="bi bi-download"></i></a>
+        }
+                else
+                {
+    <i class="bi bi-download" id="perm"></i>
+                }
+    </td>
+    <td class="icons">
+        @if (item.isEditable || isUser)
+        {
+            <a href="@Url.Action("Index","Revisions", new { FileID = item.doc})"><i class="bi bi-hourglass-split"></i></a>
+        }
+                else
+                {
+    <i class="bi bi-hourglass-split" id="perm"></i>
+                }
+    </td>
+    <td class="icons">
+        @if (isUser)
+        {
+            <a href="@Url.Action("DeleteFile", "Files", new { FileID = item.doc })"><i class="bi bi-trash"></i></a>
+        }
+                else
+                {
+    <i class="bi bi-trash" id="perm"></i>
+                }
+    </td>
+</tr>
+    }
+
+</table>
+
+<p>@ViewBag.Message</p>

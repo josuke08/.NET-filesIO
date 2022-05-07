@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ProjetGED.Models.Revision>
+
+@{
+    ViewBag.Title = "View";
+}
+<link href="~/css/tables.css" rel="stylesheet" />
+
+<h2>View</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.nom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Utilisateur.Nom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateDepos)
+        </th>
+        <th class="icons">Download</th>
+        <th class="icons">Delete</th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.nom)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Utilisateur.Nom)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.DateDepos)
+    </td>
+    <td class="icons">
+        <a href="@Url.Action("DownloadRevision","Revisions", new { RevisionID = item.version})"><i class="bi bi-download"></i></a>
+    </td>
+    <td class="icons">
+        <a href="@Url.Action("DeleteRevision","Revisions", new { RevisionID = item.version})"><i class="bi bi-trash"></i></a>
+    </td>
+</tr>
+}
+
+</table>

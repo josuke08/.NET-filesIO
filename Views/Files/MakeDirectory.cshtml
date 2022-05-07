@@ -1,0 +1,63 @@
+﻿@model ProjetGED.Models.Repertoire
+
+@{
+    ViewBag.Title = "MakeDirectory";
+}
+
+<style type="text/css">
+    .permissions td{
+        padding: 20px;
+    }
+
+</style>
+
+<h2>MakeDirectory in @ViewBag.location</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Repertoire</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NomRep, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.NomRep, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.NomRep, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <table class="permissions">
+            <tr>
+                <td>Telechargeable </td>
+                <td>@Html.CheckBoxFor(m => Model.isDowloadable)</td>
+            </tr>
+            <td>Modifiable</td>
+            <td>@Html.CheckBoxFor(m => Model.isEditable)</td>
+            <tr>
+                <td>Visible</td>
+                <td>@Html.CheckBoxFor(m => Model.isVisible)</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 text-success">
+            @ViewBag.UploadStatus
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
